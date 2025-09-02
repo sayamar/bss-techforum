@@ -41,7 +41,7 @@ const FileInput = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: #6b52d2;
+  background-color: #0D0D0D;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -50,7 +50,7 @@ const Button = styled.button`
   font-weight: 600;
 
   &:hover {
-    background-color: #5936b0;
+    background-color: #333;
   }
 `;
 

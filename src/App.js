@@ -7,7 +7,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Blogs from "./pages/Blogs";
 import SignIn from "./pages/SignIn";
 import CreatePost from "./components/CreatePost/CreatePost";
-// import Events from "./pages/Events";
+import BlogDetails from "./pages/BlogDetails";
 
 export default function App({ toggleTheme, isDark }) {
   return (
@@ -27,6 +27,7 @@ export default function App({ toggleTheme, isDark }) {
           }
         />
         <Route path="/createpost" element={<CreatePost />} /> 
+        <Route path="/blogs/:id" element={<BlogDetails />} />
       </Routes>
 {/* </div> */}
     </>

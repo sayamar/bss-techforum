@@ -44,7 +44,7 @@ const Input = styled.input`
   font-size: 14px;
   &:focus {
     outline: none;
-    border-color: #0073a8;
+    border-color: #333;
   }
 `;
 
@@ -62,7 +62,7 @@ const Checkbox = styled.input`
 const Button = styled.button`
   width: 100%;
   padding: 12px;
-  background-color: #0073a8;
+  background-color: #0D0D0D;
   color: #fff;
   font-weight: bold;
   border: none;
@@ -70,7 +70,7 @@ const Button = styled.button`
   cursor: pointer;
   margin-bottom: 20px;
   &:hover {
-    background-color: #005f82;
+    background-color: #333;
   }
 `;
 
@@ -78,9 +78,10 @@ const Links = styled.div`
   text-align: center;
   font-size: 14px;
   a {
-    color: #0073a8;
+    color: #0D0D0D;
     text-decoration: none;
     margin: 0 5px;
+    font-weight: 600;
     &:hover {
       text-decoration: underline;
     }

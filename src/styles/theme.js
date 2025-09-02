@@ -28,7 +28,7 @@ export const darkTheme = {
    mode: "dark",
   colors: {
     background: "#121212",
-    text: "#ffffff",
+    // text: "#ffffff",
   },
   fonts: {
     body: "'Poppins', sans-serif",

@@ -12,9 +12,21 @@ const dummyData = {
         "An unknown program of uncertain origin has been detected...",
       author: "ArkansasQuapaw",
       date: "Sep 01 2025",
-      likments: 0,
-      viees: 4,
-      comws: 4,
+      likes: 4,
+       comments: [
+        {
+          id: 1,
+          author: "TechHelper",
+          text: "Try checking the Task Manager for unknown processes.",
+          date: "Sep 01 2025",
+        },
+        {
+          id: 2,
+          author: "WindowsGuru",
+          text: "You can use Autoruns from Microsoft Sysinternals.",
+          date: "Sep 01 2025",
+        },],
+      views: 4,
       avatar: "",
     },
     {
@@ -26,7 +38,14 @@ const dummyData = {
       author: "JacobBrown",
       date: "Sep 01 2025",
       likes: 0,
-      comments: 0,
+       comments: [
+        {
+          id: 1,
+          author: "BlueScreenFixer",
+          text: "Update your GPU drivers — this often fixes it.",
+          date: "Sep 01 2025",
+        },
+      ],
       views: 3,
       avatar: "",
     },
@@ -39,7 +58,14 @@ const dummyData = {
       author: "SpeedyUser",
       date: "Aug 30 2025",
       likes: 10,
-      comments: 2,
+       comments: [
+        {
+          id: 1,
+          author: "BlueScreenFixer",
+          text: "Update your GPU drivers — this often fixes it.",
+          date: "Sep 01 2025",
+        },
+      ],
       views: 20,
       avatar: "",
     },
@@ -69,7 +95,7 @@ const SearchInput = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: #6b52d2;
+  background-color: #0D0D0D;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -78,7 +104,7 @@ const Button = styled.button`
   font-weight: 600;
 
   &:hover {
-    background-color: #5936b0;
+    background-color: #333;
   }
 `;
 
@@ -95,12 +121,14 @@ const Tab = styled.button`
   border: none;
   font-size: 16px;
   cursor: pointer;
-  border-bottom: ${({ active }) => (active ? "3px solid #0078D4" : "none")};
+  border-bottom: ${({ active }) => (active ? "3px solid #0D0D0D" : "none")};
   font-weight: ${({ active }) => (active ? "700" : "400")};
-  color: ${({ active }) => (active ? "#0078D4" : "#000")};
+  color: ${({ active }) => (active ? "#0D0D0D" : "#000")};
+  transition: all 0.3s ease; 
 
   &:hover {
-    color: #0078d4;
+    color: #0D0D0D;
+    font-weight: 700;
   }
 `;
 
@@ -112,7 +140,16 @@ const Card = styled.div`
   border-radius: 8px;
   margin-bottom: 16px;
   align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.3s ease; /* smooth animation */
+
+  &:hover {
+    background: #fafafa; /* slightly different background */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* soft shadow */
+    transform: translateY(-2px); /* subtle lift */
+  }
 `;
+
 
 const Avatar = styled.img`
   width: 50px;
@@ -191,7 +228,8 @@ export default function Blogs() {
 
       {filteredPosts.length > 0 ? (
         filteredPosts.map((post) => (
-          <Card key={post.id}>
+          <Card key={post.id} 
+            onClick={() => navigate(`/blogs/${post.id}`, { state: { post } })}>
             <Avatar
               src={post.avatar || `https://i.pravatar.cc/150?u=${post.author}`}
               alt={post.author}
@@ -203,7 +241,7 @@ export default function Blogs() {
                 <span>{post.author}</span>
                 <span>{post.date}</span>
                 <span>👍 {post.likes}</span>
-                <span>💬 {post.comments}</span>
+                <span>💬 {post.comments?.length || 0}</span>
                 <span>👁️ {post.views}</span>
               </Meta>
             </Content>

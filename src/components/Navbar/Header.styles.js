@@ -1,4 +1,3 @@
-// src/components/Header/Header.styles.js
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -7,19 +6,26 @@ export const Navbar = styled.nav`
   top: 0;
   z-index: 999;
   width: 100%;
-  z-index: 999;
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 32px;
+  padding: 20px 32px;
   box-shadow: 0 2px 4px
     ${({ theme }) =>
-      theme.mode === "dark"
-        ? "rgba(255,255,255,0.1)" /* light shadow for dark mode */
-        : "rgba(0,0,0,0.1)"};
+      theme.mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"};
   transition: background 0.3s ease, color 0.3s ease;
+`;
+
+export const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 24px;
+
+  img {
+    height: 32px; /* Adjust logo size */
+  }
 `;
 
 export const NavMenu = styled.ul`
@@ -30,8 +36,6 @@ export const NavMenu = styled.ul`
 
 export const NavItem = styled.li`
   position: relative;
-
-  /* Keep dropdown visible while hovering child */
   &:hover > ul {
     display: block;
   }
@@ -45,7 +49,7 @@ export const NavLink = styled(Link)`
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
-    border-bottom: 2px solid ${({ theme }) => theme.colors.primary}; /* underline effect */
+    border-bottom: 2px solid ${({ theme }) => theme.colors.primary};
   }
 `;
 
@@ -62,12 +66,10 @@ export const DropdownMenu = styled.ul`
   background: ${({ theme }) => theme.colors.background};
   border: 1px solid #ccc;
   padding: ${({ theme }) => theme.spacing(1)};
-  display: none; /* hidden by default */
+  display: none;
   list-style: none;
   min-width: 200px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-
-  /* Prevent flicker when moving between parent and dropdown */
   z-index: 1000;
 `;
 
@@ -77,12 +79,11 @@ export const DropdownLink = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.text};
 
-&:hover {
+  &:hover {
     color: ${({ theme }) => theme.colors.primary};
-    border-bottom: 2px solid ${({ theme }) => theme.colors.primary}; /* underline effect */
+    border-bottom: 2px solid ${({ theme }) => theme.colors.primary};
   }
 `;
-
 
 export const AuthButtons = styled.div`
   display: flex;
@@ -91,36 +92,33 @@ export const AuthButtons = styled.div`
 `;
 
 export const ThemeToggleBtn = styled.button`
-  background: ${({ theme }) => theme.colors.background};
+  background: transparent;
   color: ${({ theme }) => theme.colors.text};
   border: none;
-  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
-  border-radius: ${({ theme }) => theme.radius.sm};
   cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
   transition: background 0.3s ease;
+
   &:hover {
     background: ${({ theme }) =>
       theme.mode === "dark" ? "#222" : "#f0f0f0"};
   }
 `;
 
-export const RegisterBtn = styled(Link)`
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
-  border-radius: ${({ theme }) => theme.radius.sm};
-  text-decoration: none;
-  &:hover {
-    opacity: 0.9;
-  }
+export const NavWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(4)};
 `;
 
-export const SignInBtn = styled(Link)`
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
+export const ButtonWrapper = styled(Link)`
+  background: #0D0D0D;
+  color: #fff;
   padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
   border-radius: ${({ theme }) => theme.radius.sm};
   text-decoration: none;
+  font-weight: 500;
   &:hover {
     opacity: 0.9;
   }

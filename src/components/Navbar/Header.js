@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Navbar,
+  Logo,
+  NavWrapper,
   NavMenu,
   NavItem,
   NavLink,
@@ -10,14 +12,14 @@ import {
   DropdownLink,
   Arrow,
   AuthButtons,
-  RegisterBtn,
-  SignInBtn,
+  ButtonWrapper,
   ThemeToggleBtn,
 } from "./Header.styles";
-import { logout } from "../../features/auth/authSlice"; // import logout action
+import { logout } from "../../features/auth/authSlice";
+import { FaSun, FaMoon } from "react-icons/fa";
 
 export default function Header({ toggleTheme, isDark }) {
-  const dispatch = useDispatch(); // define dispatch
+  const dispatch = useDispatch();
   const [openDropdown, setOpenDropdown] = useState(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -35,9 +37,7 @@ export default function Header({ toggleTheme, isDark }) {
         { label: "Azure", link: "/azure" },
       ],
     },
-    // Only show Blogs if logged in
     ...(isAuthenticated ? [{ label: "Blogs", link: "/blogs" }] : []),
-    // { label: "Events", link: "/events" },
   ];
 
   const handleMouseEnter = (menu) => setOpenDropdown(menu);
@@ -45,50 +45,61 @@ export default function Header({ toggleTheme, isDark }) {
 
   return (
     <Navbar>
-      <NavMenu>
-        {navItems.map((item) => (
-          <NavItem
-            key={item.label}
-            onMouseEnter={() => item.children && handleMouseEnter(item.label)}
-            onMouseLeave={handleMouseLeave}
-          >
-            <NavLink to={item.link || "#"}>
-              {item.label}
-              {item.children && <Arrow open={openDropdown === item.label}>▾</Arrow>}
-            </NavLink>
+      {/* Left side: Logo + Navigation */}
+      <NavWrapper>
+        <Logo>
+          <img
+            src="https://global.fujifilm.com/themes/custom/fujifilm_com_g2/common/img/fujifilm_corporate_logo.svg"
+            alt="Fujifilm"
+          />
+        </Logo>
 
-            {item.children && (
-              <DropdownMenu open={openDropdown === item.label}>
-                {item.children.map((child) => (
-                  <li key={child.label}>
-                    <DropdownLink to={child.link}>{child.label}</DropdownLink>
-                  </li>
-                ))}
-              </DropdownMenu>
-            )}
-          </NavItem>
-        ))}
-      </NavMenu>
+        <NavMenu>
+          {navItems.map((item) => (
+            <NavItem
+              key={item.label}
+              onMouseEnter={() => item.children && handleMouseEnter(item.label)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <NavLink to={item.link || "#"}>
+                {item.label}
+                {item.children && <Arrow open={openDropdown === item.label}>▾</Arrow>}
+              </NavLink>
 
+              {item.children && (
+                <DropdownMenu open={openDropdown === item.label}>
+                  {item.children.map((child) => (
+                    <li key={child.label}>
+                      <DropdownLink to={child.link}>{child.label}</DropdownLink>
+                    </li>
+                  ))}
+                </DropdownMenu>
+              )}
+            </NavItem>
+          ))}
+        </NavMenu>
+      </NavWrapper>
+
+      {/* Right side: Auth + Theme Toggle */}
       <AuthButtons>
-        <ThemeToggleBtn onClick={toggleTheme}>
-          {isDark ? "🌙 Dark" : "☀️ Light"}
-        </ThemeToggleBtn>
+        {/* <ThemeToggleBtn onClick={toggleTheme}>
+          {isDark ? <FaMoon size={18} /> : <FaSun size={18} />}
+        </ThemeToggleBtn> */}
 
         {!isAuthenticated ? (
           <>
-            <RegisterBtn to="/register">Register</RegisterBtn>
-            <SignInBtn to="/signin">Sign in</SignInBtn>
+            <ButtonWrapper to="/register">Register</ButtonWrapper>
+            <ButtonWrapper to="/signin">Sign in</ButtonWrapper>
           </>
         ) : (
-          <SignInBtn
+          <ButtonWrapper
             as="button"
             onClick={() => {
               dispatch(logout());
             }}
           >
             Logout
-          </SignInBtn>
+          </ButtonWrapper>
         )}
       </AuthButtons>
     </Navbar>
