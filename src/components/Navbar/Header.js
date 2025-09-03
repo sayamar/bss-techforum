@@ -22,6 +22,7 @@ export default function Header({ toggleTheme, isDark }) {
   const dispatch = useDispatch();
   const [openDropdown, setOpenDropdown] = useState(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  
 
   const navItems = [
     { label: "Home", link: "/" },

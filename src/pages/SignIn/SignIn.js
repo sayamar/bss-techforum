@@ -1,32 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import passwordData from "../../api/password.json";
 import { login } from "../../features/auth/authSlice";
 import { Link } from "react-router-dom";
-import { Container, FormWrapper, Title, Label, Input, CheckboxWrapper, Checkbox, Button, Links } from "./SignIn.styles";
+import {
+  Container,
+  FormWrapper,
+  Title,
+  Label,
+  Input,
+  CheckboxWrapper,
+  Checkbox,
+  Button,
+  Links,
+} from "./SignIn.styles";
+
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [users, setUsers] = useState([]); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(""); // <-- state for error message
+  const [error, setError] = useState("");
 
-  
-const handleLogin = () => {
-  const user = passwordData.find(
-    (u) => u.email === email && u.password === password
-  );
+  // 🔹 Fetch "API"
+  useEffect(() => {
+    fetch("/api/password.json") // <--replace ur backend end point here )
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch(() => setError("Failed to load user data"));
+  }, []);
 
-  if (user) {
-    dispatch(login({ email: user.email }));
-    navigate("/blogs");
-  } else {
-    setError("Credentials are not valid");
-  }
-};
+  const handleLogin = () => {
+    const user = users.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (user) {
+      const userObj = {
+        userId: user.userId,
+        username: user.username,
+        email: user.email,
+        loginFlag: true,
+      };
+
+      dispatch(login(userObj));
+      navigate("/blogs");
+    } else {
+      setError("Credentials are not valid");
+    }
+  };
 
   return (
     <Container>
@@ -34,7 +59,13 @@ const handleLogin = () => {
         <Title>Login</Title>
 
         {error && (
-          <div style={{ color: "red", marginBottom: "15px", textAlign: "center" }}>
+          <div
+            style={{
+              color: "red",
+              marginBottom: "15px",
+              textAlign: "center",
+            }}
+          >
             {error}
           </div>
         )}
@@ -69,10 +100,9 @@ const handleLogin = () => {
         <Links>
           Forgot <a href="#">Email / Password?</a>
           <br />
-          Don't have an account? <Link to="register">Sign up</Link>
+          Don't have an account? <Link to="/register">Sign up</Link>
         </Links>
       </FormWrapper>
     </Container>
   );
 }
-
