@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-
+import {
+  Container,
+  HeaderSection,
+  SearchInput,
+  Button,
+  Tabs,
+  Tab,
+  Card,
+  Avatar,
+  Content,
+  Title,
+  Description,
+  Meta,
+} from "./Blogs.styles";
 // Dummy API data
 const dummyData = {
   recent: [
@@ -13,7 +25,7 @@ const dummyData = {
       author: "ArkansasQuapaw",
       date: "Sep 01 2025",
       likes: 4,
-       comments: [
+      comments: [
         {
           id: 1,
           author: "TechHelper",
@@ -25,7 +37,8 @@ const dummyData = {
           author: "WindowsGuru",
           text: "You can use Autoruns from Microsoft Sysinternals.",
           date: "Sep 01 2025",
-        },],
+        },
+      ],
       views: 4,
       avatar: "",
     },
@@ -38,7 +51,7 @@ const dummyData = {
       author: "JacobBrown",
       date: "Sep 01 2025",
       likes: 0,
-       comments: [
+      comments: [
         {
           id: 1,
           author: "BlueScreenFixer",
@@ -58,7 +71,7 @@ const dummyData = {
       author: "SpeedyUser",
       date: "Aug 30 2025",
       likes: 10,
-       comments: [
+      comments: [
         {
           id: 1,
           author: "BlueScreenFixer",
@@ -71,114 +84,6 @@ const dummyData = {
     },
   ],
 };
-
-const Container = styled.div`
-  padding: 32px;
-  max-width: 95vw;
-  margin: 0 auto;
-`;
-
-const HeaderSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const SearchInput = styled.input`
-  flex: 1;
-  padding: 10px 16px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 16px;
-`;
-
-const Button = styled.button`
-  background-color: #0D0D0D;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-
-  &:hover {
-    background-color: #333;
-  }
-`;
-
-const Tabs = styled.div`
-  display: flex;
-  gap: 24px;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 24px;
-`;
-
-const Tab = styled.button`
-  padding: 8px 16px;
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  border-bottom: ${({ active }) => (active ? "3px solid #0D0D0D" : "none")};
-  font-weight: ${({ active }) => (active ? "700" : "400")};
-  color: ${({ active }) => (active ? "#0D0D0D" : "#000")};
-  transition: all 0.3s ease; 
-
-  &:hover {
-    color: #0D0D0D;
-    font-weight: 700;
-  }
-`;
-
-const Card = styled.div`
-  display: flex;
-  gap: 16px;
-  padding: 16px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  align-items: flex-start;
-  cursor: pointer;
-  transition: all 0.3s ease; /* smooth animation */
-
-  &:hover {
-    background: #fafafa; /* slightly different background */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* soft shadow */
-    transform: translateY(-2px); /* subtle lift */
-  }
-`;
-
-
-const Avatar = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-const Content = styled.div`
-  flex: 1;
-`;
-
-const Title = styled.h2`
-  font-size: 18px;
-  margin: 0 0 8px 0;
-`;
-
-const Description = styled.p`
-  font-size: 14px;
-  color: #555;
-  margin: 0 0 8px 0;
-`;
-
-const Meta = styled.div`
-  font-size: 12px;
-  color: #777;
-  display: flex;
-  gap: 16px;
-`;
 
 export default function Blogs() {
   const navigate = useNavigate();
@@ -228,8 +133,10 @@ export default function Blogs() {
 
       {filteredPosts.length > 0 ? (
         filteredPosts.map((post) => (
-          <Card key={post.id} 
-            onClick={() => navigate(`/blogs/${post.id}`, { state: { post } })}>
+          <Card
+            key={post.id}
+            onClick={() => navigate(`/blogs/${post.id}`, { state: { post } })}
+          >
             <Avatar
               src={post.avatar || `https://i.pravatar.cc/150?u=${post.author}`}
               alt={post.author}

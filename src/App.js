@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Navbar/Header";
-import Home from "./pages/Home";
-import About from "./pages/About";
+import Home from "./pages/Home/Home";
+import About from "./pages/About/About";
 import PrivateRoute from "./components/PrivateRoute";
-import Blogs from "./pages/Blogs";
-import SignIn from "./pages/SignIn";
+import Blogs from "./pages/Blogs/Blogs";
+import SignIn from "./pages/SignIn/SignIn";
 import CreatePost from "./components/CreatePost/CreatePost";
-import BlogDetails from "./pages/BlogDetails";
+import BlogDetails from "./pages/BlogDetails/BlogDetails";
 
 export default function App({ toggleTheme, isDark }) {
   return (
@@ -26,8 +26,8 @@ export default function App({ toggleTheme, isDark }) {
             </PrivateRoute>
           }
         />
-        <Route path="/createpost" element={<CreatePost />} /> 
-        <Route path="/blogs/:id" element={<BlogDetails />} />
+        <Route path="/createpost" element={<PrivateRoute><CreatePost /></PrivateRoute>} /> 
+        <Route path="/blogs/:id" element={<PrivateRoute><BlogDetails /></PrivateRoute>} />
       </Routes>
 {/* </div> */}
     </>

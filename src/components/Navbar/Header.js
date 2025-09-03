@@ -63,7 +63,9 @@ export default function Header({ toggleTheme, isDark }) {
             >
               <NavLink to={item.link || "#"}>
                 {item.label}
-                {item.children && <Arrow open={openDropdown === item.label}>▾</Arrow>}
+                {item.children && (
+                  <Arrow open={openDropdown === item.label}>▾</Arrow>
+                )}
               </NavLink>
 
               {item.children && (
