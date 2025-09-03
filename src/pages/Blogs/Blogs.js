@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaUserCircle } from "react-icons/fa";
 import {
   Container,
   HeaderSection,
@@ -14,92 +16,31 @@ import {
   Description,
   Meta,
 } from "./Blogs.styles";
-// Dummy API data
-const dummyData = {
-  recent: [
-    {
-      id: 1,
-      title: "How to uninstall unknown programs with unknown paths in Windows",
-      description:
-        "An unknown program of uncertain origin has been detected...",
-      author: "ArkansasQuapaw",
-      date: "Sep 01 2025",
-      likes: 4,
-      comments: [
-        {
-          id: 1,
-          author: "TechHelper",
-          text: "Try checking the Task Manager for unknown processes.",
-          date: "Sep 01 2025",
-        },
-        {
-          id: 2,
-          author: "WindowsGuru",
-          text: "You can use Autoruns from Microsoft Sysinternals.",
-          date: "Sep 01 2025",
-        },
-      ],
-      views: 4,
-      avatar: "",
-    },
-    {
-      id: 2,
-      title:
-        "Windows system blue screen of death interface actually displays advertisements",
-      description:
-        "Hello, my computer crashes with a blue screen when launching Minecraft...",
-      author: "JacobBrown",
-      date: "Sep 01 2025",
-      likes: 0,
-      comments: [
-        {
-          id: 1,
-          author: "BlueScreenFixer",
-          text: "Update your GPU drivers — this often fixes it.",
-          date: "Sep 01 2025",
-        },
-      ],
-      views: 3,
-      avatar: "",
-    },
-  ],
-  trending: [
-    {
-      id: 3,
-      title: "How to speed up Windows boot time",
-      description: "Tips and tricks to make your Windows system boot faster...",
-      author: "SpeedyUser",
-      date: "Aug 30 2025",
-      likes: 10,
-      comments: [
-        {
-          id: 1,
-          author: "BlueScreenFixer",
-          text: "Update your GPU drivers — this often fixes it.",
-          date: "Sep 01 2025",
-        },
-      ],
-      views: 20,
-      avatar: "",
-    },
-  ],
-};
 
 export default function Blogs() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("recent");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    setTimeout(() => {
-      setData(dummyData);
-    }, 500);
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("/api/blogs.json"); // ⬅️ reads from public/api/blogs.json
+        setData(res.data);
+      } catch (err) {
+        setError("Failed to load blogs.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
   }, []);
 
   const currentPosts = data[activeTab] || [];
 
-  // Filter posts based on search input
   const filteredPosts = currentPosts.filter((post) =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -131,16 +72,24 @@ export default function Blogs() {
         ))}
       </Tabs>
 
-      {filteredPosts.length > 0 ? (
+      {loading ? (
+        <p>Loading blogs...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : filteredPosts.length > 0 ? (
         filteredPosts.map((post) => (
           <Card
             key={post.id}
             onClick={() => navigate(`/blogs/${post.id}`, { state: { post } })}
           >
-            <Avatar
-              src={post.avatar || `https://i.pravatar.cc/150?u=${post.author}`}
-              alt={post.author}
-            />
+            {post.avatar ? (
+              <Avatar src={post.avatar} alt={post.author} />
+            ) : (
+              <FaUserCircle
+                size={40}
+                style={{ marginRight: "12px", color: "#666" }}
+              />
+            )}
             <Content>
               <Title>{post.title}</Title>
               <Description>{post.description}</Description>

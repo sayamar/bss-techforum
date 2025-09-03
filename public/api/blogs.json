@@ -1,0 +1,120 @@
+{
+  "recent": [
+    {
+      "id": 1,
+      "title": "How to uninstall unknown programs with unknown paths in Windows",
+      "description": "An unknown program of uncertain origin has been detected...",
+      "author": "ArkansasQuapaw",
+      "date": "Sep 01 2025",
+      "likes": 4,
+      "comments": [
+        {
+          "id": 1,
+          "author": "TechHelper",
+          "text": "Try checking the Task Manager for unknown processes.",
+          "date": "Sep 01 2025"
+        },
+        {
+          "id": 2,
+          "author": "WindowsGuru",
+          "text": "You can use Autoruns from Microsoft Sysinternals.",
+          "date": "Sep 01 2025"
+        }
+      ],
+      "views": 4,
+      "avatar": ""
+    },
+    {
+      "id": 2,
+      "title": "Best practices for securing your Wi-Fi network",
+      "description": "Simple steps to keep your home Wi-Fi safe from intruders...",
+      "author": "NetSecure",
+      "date": "Sep 02 2025",
+      "likes": 7,
+      "comments": [
+        {
+          "id": 1,
+          "author": "RouterPro",
+          "text": "Always change the default admin password.",
+          "date": "Sep 02 2025"
+        }
+      ],
+      "views": 12,
+      "avatar": ""
+    },
+    {
+      "id": 3,
+      "title": "How to recover deleted files in Windows",
+      "description": "Accidentally deleted files? Here’s how you can get them back...",
+      "author": "DataSaver",
+      "date": "Aug 28 2025",
+      "likes": 15,
+      "comments": [
+        {
+          "id": 1,
+          "author": "RecoverIt",
+          "text": "Use Recuva or Windows File History if enabled.",
+          "date": "Aug 29 2025"
+        }
+      ],
+      "views": 30,
+      "avatar": ""
+    }
+  ],
+  "trending": [
+    {
+      "id": 3,
+      "title": "How to speed up Windows boot time",
+      "description": "Tips and tricks to make your Windows system boot faster...",
+      "author": "SpeedyUser",
+      "date": "Aug 30 2025",
+      "likes": 10,
+      "comments": [
+        {
+          "id": 1,
+          "author": "BlueScreenFixer",
+          "text": "Update your GPU drivers — this often fixes it.",
+          "date": "Sep 01 2025"
+        }
+      ],
+      "views": 20,
+      "avatar": ""
+    },
+    {
+      "id": 4,
+      "title": "Top 5 browsers for privacy in 2025",
+      "description": "We compared the best browsers for privacy and security...",
+      "author": "PrivacyFirst",
+      "date": "Sep 01 2025",
+      "likes": 25,
+      "comments": [
+        {
+          "id": 1,
+          "author": "CyberGuardian",
+          "text": "Brave and Firefox are still my go-to browsers.",
+          "date": "Sep 02 2025"
+        }
+      ],
+      "views": 40,
+      "avatar": ""
+    },
+    {
+      "id": 5,
+      "title": "How to set up dual monitors on Windows",
+      "description": "A step-by-step guide to boosting productivity with dual monitors...",
+      "author": "MultiScreenFan",
+      "date": "Aug 27 2025",
+      "likes": 18,
+      "comments": [
+        {
+          "id": 1,
+          "author": "WorkSmart",
+          "text": "Don’t forget to adjust scaling in Display Settings!",
+          "date": "Aug 28 2025"
+        }
+      ],
+      "views": 35,
+      "avatar": ""
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { login } from "../../features/auth/authSlice";
-import { Link } from "react-router-dom";
 import {
   Container,
   FormWrapper,
@@ -19,21 +19,31 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState([]); 
+  const [users, setUsers] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  // 🔹 Fetch "API"
+  // 🔹 Fetch user data (replace with your backend API)
   useEffect(() => {
-    fetch("/api/password.json") // <--replace ur backend end point here )
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch(() => setError("Failed to load user data"));
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get("/api/password.json"); // ⬅️ replace with real backend API
+        setUsers(res.data);
+      } catch (err) {
+        setError("Failed to load user data");
+      }
+    };
+    fetchUsers();
   }, []);
 
   const handleLogin = () => {
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+
     const user = users.find(
       (u) => u.email === email && u.password === password
     );
@@ -46,10 +56,10 @@ export default function SignIn() {
         loginFlag: true,
       };
 
-      dispatch(login(userObj));
+      dispatch(login(userObj)); // ✅ This will also save to localStorage (handled in slice)
       navigate("/blogs");
     } else {
-      setError("Credentials are not valid");
+      setError("Invalid credentials. Please try again.");
     }
   };
 
@@ -59,13 +69,7 @@ export default function SignIn() {
         <Title>Login</Title>
 
         {error && (
-          <div
-            style={{
-              color: "red",
-              marginBottom: "15px",
-              textAlign: "center",
-            }}
-          >
+          <div style={{ color: "red", marginBottom: "15px", textAlign: "center" }}>
             {error}
           </div>
         )}
@@ -100,7 +104,7 @@ export default function SignIn() {
         <Links>
           Forgot <a href="#">Email / Password?</a>
           <br />
-          Don't have an account? <Link to="/register">Sign up</Link>
+          Don&apos;t have an account? <Link to="/register">Sign up</Link>
         </Links>
       </FormWrapper>
     </Container>

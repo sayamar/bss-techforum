@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// ✅ Load saved user from localStorage if available
+const savedUser = localStorage.getItem("authUser");
+const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+
 const initialState = {
-  isAuthenticated: false,
-  user: {
+  isAuthenticated: !!parsedUser,
+  user: parsedUser || {
     userId: null,
     username: "",
     email: "",
@@ -20,8 +24,10 @@ const authSlice = createSlice({
         userId: action.payload.userId,
         username: action.payload.username,
         email: action.payload.email,
-        loginFlag: true, // ✅ automatically set true when logged in
+        loginFlag: true,
       };
+      // ✅ Save to localStorage
+      localStorage.setItem("authUser", JSON.stringify(state.user));
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -31,6 +37,8 @@ const authSlice = createSlice({
         email: "",
         loginFlag: false,
       };
+      // ✅ Clear from localStorage
+      localStorage.removeItem("authUser");
     },
   },
 });

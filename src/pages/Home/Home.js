@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import BlogCard from "../../components/BlogCard/BlogCard";
 import {
   Banner,
@@ -12,12 +13,17 @@ import {
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/photos?_limit=10")
-      .then((res) => res.json())
-      .then((data) => {
-        const fakePosts = data.map((item, i) => ({
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get(
+          "https://jsonplaceholder.typicode.com/photos?_limit=10"
+        );
+
+        const fakePosts = res.data.map((item, i) => ({
           id: item.id,
           image: item.url,
           title: `Sample Blog Post ${i + 1}`,
@@ -28,11 +34,19 @@ export default function Home() {
           authorAvatar: `https://i.pravatar.cc/150?img=${i + 10}`,
           date: ["2h ago", "Yesterday", "2d ago"][i % 3],
         }));
+
         setPosts(fakePosts);
-      });
+      } catch (err) {
+        setError("Failed to load blog posts. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
   }, []);
 
-  // Filter posts by search input
+  // 🔹 Filter posts by search input
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(search.toLowerCase())
   );
@@ -51,13 +65,22 @@ export default function Home() {
 
       <Container>
         <Heading>Latest Blog Posts</Heading>
-        <Grid>
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post) => <BlogCard key={post.id} post={post} />)
-          ) : (
-            <p>No posts found matching "{search}"</p>
-          )}
-        </Grid>
+
+        {loading ? (
+          <p>Loading posts...</p>
+        ) : error ? (
+          <p style={{ color: "red" }}>{error}</p>
+        ) : (
+          <Grid>
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map((post) => (
+                <BlogCard key={post.id} post={post} />
+              ))
+            ) : (
+              <p>No posts found matching "{search}"</p>
+            )}
+          </Grid>
+        )}
       </Container>
     </>
   );
