@@ -5,36 +5,46 @@ import {
   Title,
   Input,
   Textarea,
-  FileInput,
   Button,
 } from "./CreatePost.styles";
 
 export default function CreatePost() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
+    userId: "1",       // hardcoded for now
+    categoryId: "100", // hardcoded for now
     title: "",
-    description: "",
-    file: null,
+    content: "",
   });
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Post submitted:", form);
+    try {
+      const response = await fetch("http://localhost:8589/api/v1/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    // TODO: send to backend API
-    alert("Post created successfully ✅");
+      if (!response.ok) {
+        throw new Error("Failed to create post");
+      }
 
-    // redirect to blogs
-    navigate("/blogs");
+      console.log("Post created:", await response.json());
+      alert("Post created successfully ✅");
+
+      // redirect to blogs
+      navigate("/blogs");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to create post");
+    }
   };
 
   return (
@@ -50,18 +60,22 @@ export default function CreatePost() {
           required
         />
         <Textarea
-          name="description"
-          placeholder="Enter description"
-          value={form.description}
+          name="content"
+          placeholder="Enter content"
+          value={form.content}
           onChange={handleChange}
           required
         />
-        <FileInput
-          type="file"
-          name="file"
-          accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
+
+        {/* if you want user to select category dynamically */}
+        <Input
+          type="text"
+          name="categoryId"
+          placeholder="Enter category ID"
+          value={form.categoryId}
           onChange={handleChange}
         />
+
         <Button type="submit">Submit</Button>
       </form>
     </Container>

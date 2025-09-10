@@ -20,28 +20,86 @@ import {
 export default function Blogs() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("recent");
-  const [data, setData] = useState({});
+  const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchPosts = async () => {
       try {
-        const res = await axios.get("/api/blogs.json"); // ⬅️ reads from public/api/blogs.json
-        setData(res.data);
+        const res = await axios.get("http://localhost:8589/api/v1/posts");
+        setPosts(res.data);
       } catch (err) {
-        setError("Failed to load blogs.");
+        console.error(err);
+        setError("Failed to load posts.");
       } finally {
         setLoading(false);
       }
     };
-    fetchBlogs();
+    fetchPosts();
   }, []);
 
-  const currentPosts = data[activeTab] || [];
+  // ✅ Categorize posts into tabs with updated rules
+  const categorizePosts = (posts) => {
+    const now = new Date();
+    const solutions = [];
+    const recent = [];
+    const noReplies = [];
+    const trending = [];
 
-  const filteredPosts = currentPosts.filter((post) =>
+    posts.forEach((post) => {
+      const createdDate = new Date(post.createdAt);
+      const diffInDays = (now - createdDate) / (1000 * 60 * 60 * 24);
+
+      if (post.solved) {
+        // ✅ Solved posts
+        solutions.push(post);
+      } else if (diffInDays <= 2) {
+        // ✅ Created within 2 days → Recent
+        recent.push(post);
+      } else if (!post.comments || post.comments.length === 0) {
+        // ✅ No comments → No Replies
+        noReplies.push(post);
+      } else if ((post.comments?.length || 0) >= 1) {
+        // ✅ At least 1 comment → Trending
+        trending.push(post);
+      } else {
+        // ✅ Default → push to Recent
+        recent.push(post);
+      }
+    });
+
+    const sortDesc = (arr) =>
+      arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    return {
+      solutions: sortDesc(solutions),
+      recent: sortDesc(recent),
+      noReplies: sortDesc(noReplies),
+      trending: sortDesc(trending),
+    };
+  };
+
+  const categorized = categorizePosts(posts);
+
+  const getPostsForTab = () => {
+    switch (activeTab) {
+      case "recent":
+        return categorized.recent;
+      case "trending":
+        return categorized.trending;
+      case "solutions":
+        return categorized.solutions;
+      case "noReplies":
+        return categorized.noReplies;
+      default:
+        return [];
+    }
+  };
+
+  // ✅ Apply search filter per tab
+  const filteredPosts = getPostsForTab().filter((post) =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -73,17 +131,19 @@ export default function Blogs() {
       </Tabs>
 
       {loading ? (
-        <p>Loading blogs...</p>
+        <p>Loading posts...</p>
       ) : error ? (
         <p style={{ color: "red" }}>{error}</p>
       ) : filteredPosts.length > 0 ? (
         filteredPosts.map((post) => (
           <Card
-            key={post.id}
-            onClick={() => navigate(`/blogs/${post.id}`, { state: { post } })}
+            key={post.postId}
+            onClick={() =>
+              navigate(`/blogs/${post.postId}`, { state: { post } })
+            }
           >
             {post.avatar ? (
-              <Avatar src={post.avatar} alt={post.author} />
+              <Avatar src={post.avatar} alt={post.username} />
             ) : (
               <FaUserCircle
                 size={40}
@@ -92,13 +152,21 @@ export default function Blogs() {
             )}
             <Content>
               <Title>{post.title}</Title>
-              <Description>{post.description}</Description>
+              <Description>{post.content}</Description>
               <Meta>
-                <span>{post.author}</span>
-                <span>{post.date}</span>
-                <span>👍 {post.likes}</span>
+                <span>👤 {post.username}</span>
+                <span>📌 {post.categoryName}</span>
+                <span>
+                  🗓️{" "}
+                  {new Date(post.createdAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+                <span>👍 {post.likesCount}</span>
                 <span>💬 {post.comments?.length || 0}</span>
-                <span>👁️ {post.views}</span>
+                {post.solved && <span>✅ Solved</span>}
               </Meta>
             </Content>
           </Card>

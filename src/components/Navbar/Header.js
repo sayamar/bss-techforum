@@ -1,10 +1,9 @@
-// src/components/Header/Header.js
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom"; // add this import
 import {
   Navbar,
   Logo,
-  NavWrapper,
   NavMenu,
   NavItem,
   NavLink,
@@ -13,32 +12,33 @@ import {
   Arrow,
   AuthButtons,
   ButtonWrapper,
-  ThemeToggleBtn,
+  HeaderLeft,
+  HeaderRight
 } from "./Header.styles";
 import { logout } from "../../features/auth/authSlice";
-import { FaSun, FaMoon } from "react-icons/fa";
 
-export default function Header({ toggleTheme, isDark }) {
+export default function Header() {
   const dispatch = useDispatch();
   const [openDropdown, setOpenDropdown] = useState(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  
 
   const navItems = [
-    { label: "Home", link: "/" },
-    { label: "Hubs", link: "/hubs" },
+    // { label: "Home", link: "/" },
+    // { label: "Tech Community", link: "/hubs" },
     {
-      label: "Products",
+      label: "Community",
       children: [
-        { label: "Microsoft 365", link: "/m365" },
-        { label: "Windows", link: "/windows" },
-        { label: "Microsoft 365 Copilot", link: "/copilot" },
-        { label: "Microsoft Teams", link: "/teams" },
-        { label: "Microsoft Security", link: "/security" },
-        { label: "Azure", link: "/azure" },
+        { label: "ITES", link: "/blogs" },
+        { label: "Guardia", link: "/guardia" },
+        { label: "Microsoft", link: "/feed" },
+        { label: "RTS", link: "/rts" },
+        { label: "Xerox", link: "/Xerox" },
+        { label: "All Forums", link: "/allforums" },
+        { label: "All Topics", link: "/alltopics" },
       ],
     },
-    ...(isAuthenticated ? [{ label: "Blogs", link: "/blogs" }] : []),
+    // ...(isAuthenticated ? [{ label: "ITES Posts", link: "/blogs" }] : []),
+    { label: "Shop", link: "/shops" },
   ];
 
   const handleMouseEnter = (menu) => setOpenDropdown(menu);
@@ -46,15 +46,19 @@ export default function Header({ toggleTheme, isDark }) {
 
   return (
     <Navbar>
-      {/* Left side: Logo + Navigation */}
-      <NavWrapper>
-        <Logo>
-          <img
-            src="https://global.fujifilm.com/themes/custom/fujifilm_com_g2/common/img/fujifilm_corporate_logo.svg"
-            alt="Fujifilm"
-          />
-        </Logo>
+      {/* Left: Logo + Customer Support Forum */}
+      <HeaderLeft>
+  <Logo as={Link} to="/">
+    <img
+      src="https://global.fujifilm.com/themes/custom/fujifilm_com_g2/common/img/fujifilm_corporate_logo.svg"
+      alt="Fujifilm"
+    />
+  </Logo>
+  <h2>Customer Support Forum</h2>
+</HeaderLeft>
 
+      {/* Right: Nav items + Auth buttons */}
+      <HeaderRight>
         <NavMenu>
           {navItems.map((item) => (
             <NavItem
@@ -64,9 +68,7 @@ export default function Header({ toggleTheme, isDark }) {
             >
               <NavLink to={item.link || "#"}>
                 {item.label}
-                {item.children && (
-                  <Arrow open={openDropdown === item.label}>▾</Arrow>
-                )}
+                {item.children && <Arrow open={openDropdown === item.label}>▾</Arrow>}
               </NavLink>
 
               {item.children && (
@@ -81,30 +83,20 @@ export default function Header({ toggleTheme, isDark }) {
             </NavItem>
           ))}
         </NavMenu>
-      </NavWrapper>
 
-      {/* Right side: Auth + Theme Toggle */}
-      <AuthButtons>
-        {/* <ThemeToggleBtn onClick={toggleTheme}>
-          {isDark ? <FaMoon size={18} /> : <FaSun size={18} />}
-        </ThemeToggleBtn> */}
-
-        {!isAuthenticated ? (
-          <>
-            <ButtonWrapper to="/register">Register</ButtonWrapper>
+        <AuthButtons>
+          {!isAuthenticated ? (
             <ButtonWrapper to="/signin">Sign in</ButtonWrapper>
-          </>
-        ) : (
-          <ButtonWrapper
-            as="button"
-            onClick={() => {
-              dispatch(logout());
-            }}
-          >
-            Logout
-          </ButtonWrapper>
-        )}
-      </AuthButtons>
+          ) : (
+            <ButtonWrapper
+              as="button"
+              onClick={() => dispatch(logout())}
+            >
+              Logout
+            </ButtonWrapper>
+          )}
+        </AuthButtons>
+      </HeaderRight>
     </Navbar>
   );
 }

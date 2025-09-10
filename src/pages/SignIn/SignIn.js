@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -19,46 +19,39 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  // 🔹 Fetch user data (replace with your backend API)
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get("/api/password.json"); // ⬅️ replace with real backend API
-        setUsers(res.data);
-      } catch (err) {
-        setError("Failed to load user data");
-      }
-    };
-    fetchUsers();
-  }, []);
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setError("Email and password are required");
       return;
     }
 
-    const user = users.find(
-      (u) => u.email === email && u.password === password
-    );
+    const userLoginRequest = {
+      email,
+      password,
+    };
 
-    if (user) {
+    try {
+      const res = await axios.post("http://localhost:8589/api/v1/login", userLoginRequest);
+
+      // assume backend returns user object or JWT token
+      const user = res.data;
+
       const userObj = {
         userId: user.userId,
         username: user.username,
         email: user.email,
         loginFlag: true,
+        token: user.token, // optional if JWT returned
       };
 
-      dispatch(login(userObj)); // ✅ This will also save to localStorage (handled in slice)
+      dispatch(login(userObj));
       navigate("/blogs");
-    } else {
+    } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
   };
@@ -74,7 +67,7 @@ export default function SignIn() {
           </div>
         )}
 
-        <Label>Email:</Label>
+        <Label>Email Address</Label>
         <Input
           type="email"
           placeholder="Enter email"
@@ -82,7 +75,7 @@ export default function SignIn() {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <Label>Password:</Label>
+        <Label>Password</Label>
         <Input
           type={showPassword ? "text" : "password"}
           placeholder="Enter password"

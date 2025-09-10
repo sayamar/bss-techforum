@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { FaUserCircle } from "react-icons/fa";
+import axios from "axios";
 import {
   Container,
   Title,
@@ -16,8 +18,10 @@ import {
   CommentHeader,
   CommentText,
 } from "./BlogDetails.styles";
+
 export default function BlogDetails() {
   const { state } = useLocation();
+  const authUser = useSelector((store) => store.auth.user); // ✅ get logged-in user
 
   if (!state?.post) {
     return <p>No blog data found. Go back to Blogs.</p>;
@@ -27,35 +31,52 @@ export default function BlogDetails() {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(blog.comments || []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!comment.trim()) return;
 
-    const newComment = {
-      id: Date.now(),
-      text: comment,
-      author: "CurrentUser", // TODO: replace with logged-in user
-      date: "1m ago",
-      avatar: "", // fallback to icon if empty
-    };
+    if (!authUser?.userId) {
+      alert("⚠️ Please log in to comment.");
+      return;
+    }
 
-    setComments([...comments, newComment]);
-    setComment("");
+    try {
+      const res = await axios.post(
+        `http://localhost:8589/api/v1/comments`, // ✅ your backend CommentController
+        {
+          postId: blog.postId,
+          userId: authUser.userId,
+          username: authUser.username, // optional, in case backend uses it
+          comment: comment,
+           createdAt: null,
+        }
+      );
+
+      // ✅ Backend returns updated list of comments for the post
+      setComments(res.data);
+      setComment("");
+    } catch (err) {
+      console.error("❌ Failed to post comment", err);
+      alert("Failed to post comment.");
+    }
   };
 
   return (
     <Container>
       <Title>{blog.title}</Title>
-      <Description>{blog.description}</Description>
+      <Description>{blog.content}</Description>
       <Author>
-        By {blog.author} on {blog.date}
+        By {blog.username} on{" "}
+        {new Date(blog.createdAt).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })}
       </Author>
 
       <Stats>
-        <span>👍 {blog.likes}</span>
+        <span>👍 {blog.likesCount}</span>
         <span>💬 {comments.length}</span>
-        <span>👁️ {blog.views}</span>
       </Stats>
 
       <form onSubmit={handleSubmit}>
@@ -71,19 +92,24 @@ export default function BlogDetails() {
         <h3>Comments ({comments.length})</h3>
         {comments.length > 0 ? (
           comments.map((c) => (
-            <CommentCard key={c.id}>
+            <CommentCard key={c.commentId}>
               <Avatar>
-                {c.avatar ? (
-                  <img src={c.avatar} alt="avatar" />
-                ) : (
-                  <FaUserCircle />
-                )}
+                {c.avatar ? <img src={c.avatar} alt="avatar" /> : <FaUserCircle />}
               </Avatar>
               <CommentContent>
                 <CommentHeader>
-                  {c.author} <span>{c.date}</span>
+                  {c.username || "Anonymous"}{" "}
+                  <span>
+                    {c.createdAt
+                      ? new Date(c.createdAt).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "just now"}
+                  </span>
                 </CommentHeader>
-                <CommentText>{c.text}</CommentText>
+                <CommentText>{c.comment}</CommentText>
               </CommentContent>
             </CommentCard>
           ))

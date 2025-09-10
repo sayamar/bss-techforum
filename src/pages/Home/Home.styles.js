@@ -44,3 +44,4 @@ export const Grid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 24px;
 `;
+

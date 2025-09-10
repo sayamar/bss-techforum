@@ -123,3 +123,16 @@ export const ButtonWrapper = styled(Link)`
     opacity: 0.9;
   }
 `;
+
+export const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
+export const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(3)};
+`;
+
