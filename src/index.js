@@ -16,7 +16,7 @@ function Root() {
 
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename="/bss-tech">
         <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
           <GlobalStyle />
           <App toggleTheme={() => setIsDark(!isDark)} isDark={isDark} />
