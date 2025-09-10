@@ -36,7 +36,7 @@ export default function SignIn() {
     };
 
     try {
-      const res = await axios.post("http://localhost:8589/api/v1/login", userLoginRequest);
+      const res = await axios.post("http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/login", userLoginRequest);
 
       // assume backend returns user object or JWT token
       const user = res.data;
