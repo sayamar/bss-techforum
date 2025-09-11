@@ -29,12 +29,8 @@ export default function Header() {
       label: "Community",
       children: [
         { label: "ITES", link: "/blogs" },
-        { label: "Guardia", link: "/guardia" },
-        { label: "Microsoft", link: "/feed" },
-        { label: "RTS", link: "/rts" },
-        { label: "Xerox", link: "/Xerox" },
-        { label: "All Forums", link: "/allforums" },
-        { label: "All Topics", link: "/alltopics" },
+        { label: "Ask a question", link: "/guardia" },
+       
       ],
     },
     // ...(isAuthenticated ? [{ label: "ITES Posts", link: "/blogs" }] : []),

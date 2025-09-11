@@ -21,6 +21,7 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const res = await axios.get("http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/feed");
+          // const res = await axios.get("http://localhost:8589/api/v1/feed");
 
         const blogPosts = res.data.map((item) => ({
           id: item.link,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; // ✅ Redux hook
 import axios from "axios";
 import {
   Container,
@@ -13,21 +14,33 @@ import {
 
 export default function CreatePost() {
   const navigate = useNavigate();
+  const authUser = useSelector((store) => store.auth.user); // ✅ get logged-in user
+
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
     title: "",
     content: "",
     categoryId: "",
-    userId: 1, // 👈 replace with logged-in user from Redux/Context
+    userId: "", // will set from authUser
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // Set logged-in userId when authUser is available
+    if (authUser?.userId) {
+      setForm((prev) => ({ ...prev, userId: authUser.userId }));
+    }
+  }, [authUser]);
+
+  useEffect(() => {
     // Fetch categories for dropdown
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/categories");
+       
+         const res = await axios.get(
+          "http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/categories"
+        );
         setCategories(res.data);
       } catch (err) {
         console.error(err);
@@ -47,8 +60,21 @@ export default function CreatePost() {
     setLoading(true);
     setError("");
 
+    if (!authUser?.userId) {
+      setError("Please log in to create a post.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      await axios.post("http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/posts", form);
+      await axios.post(
+        "http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/posts",
+        form
+      );
+      //  await axios.post(
+      //   "http://localhost:8589/api/v1/posts",
+      //   form
+      // );
       navigate("/blogs"); // Redirect back to blogs list
     } catch (err) {
       console.error(err);
@@ -74,8 +100,8 @@ export default function CreatePost() {
         >
           <option value="">-- Select Category --</option>
           {categories.map((cat) => (
-            <option key={cat.categoryId} value={cat.categoryId}>
-              {cat.name}
+            <option key={cat.id} value={cat.id}>
+              {cat.name} {/* show only category name */}
             </option>
           ))}
         </Select>

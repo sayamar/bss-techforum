@@ -29,6 +29,7 @@ export default function Blogs() {
     const fetchPosts = async () => {
       try {
         const res = await axios.get("http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/posts");
+        //  const res = await axios.get("http://localhost:8589/api/v1/posts");
         setPosts(res.data);
       } catch (err) {
         console.error(err);

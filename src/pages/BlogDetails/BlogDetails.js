@@ -42,7 +42,8 @@ export default function BlogDetails() {
 
     try {
       const res = await axios.post(
-        `http://localhost:8589/api/v1/comments`, // ✅ your backend CommentController
+        `http://bss-tech.ap01.fujifilm-intra.com:8589/api/v1/comments`, // ✅ your backend CommentController
+        // `http://localhost:8589/api/v1/comments`,
         {
           postId: blog.postId,
           userId: authUser.userId,
