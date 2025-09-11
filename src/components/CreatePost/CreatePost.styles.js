@@ -1,4 +1,6 @@
+// src/components/CreatePost/CreatePost.styles.js
 import styled from "styled-components";
+
 export const Container = styled.div`
   max-width: 600px;
   margin: 40px auto;
@@ -8,36 +10,45 @@ export const Container = styled.div`
   background: #fff;
 `;
 
-export const Title = styled.h2`
-  font-size: 24px;
-  margin-bottom: 20px;
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+export const Label = styled.label`
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
 `;
 
 export const Input = styled.input`
   width: 100%;
   padding: 10px;
-  margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
 `;
 
-export const Textarea = styled.textarea`
+export const TextArea = styled.textarea`
   width: 100%;
+  min-height: 100px;
   padding: 10px;
-  margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  min-height: 100px;
+  resize: vertical;
 `;
 
-export const FileInput = styled.input`
-  margin-bottom: 16px;
+export const Select = styled.select`
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
 `;
 
 export const Button = styled.button`
-  background-color: #0D0D0D;
+  background-color: #0d0d0d;
   color: #fff;
   border: none;
   padding: 10px 20px;
